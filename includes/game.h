@@ -1,10 +1,12 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include "world.h"
 
 struct Game {
     SDL_Window *window;
     SDL_Renderer *renderer;
+    World world;
 
     bool running = true;
 
