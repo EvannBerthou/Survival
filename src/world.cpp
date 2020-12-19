@@ -5,12 +5,11 @@ void World::update() {
     player.update();
 }
 
-void World::render(SDL_Renderer *renderer) {
-    int offset[2] = {800 / 2 - player.pos.x - 25, 600 / 2 - player.pos.y - 25}; // Centers on the player
-    player.render(renderer, offset);
+void World::render(SDL_Renderer *renderer, Camera &camera) {
     for (int i = 0; i < entity_count; i++) {
-        entities[i].render(renderer, offset);
+        camera.render_to_cam(renderer, entities[i].to_rect(), entities[i].color);
     }
+    camera.render_to_cam(renderer, player.to_rect(), player.color);
 }
 
 void World::move_player(SDL_Keycode code) {

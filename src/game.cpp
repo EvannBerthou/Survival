@@ -41,13 +41,15 @@ void Game::event(SDL_Event *event) {
 
 void Game::update() {
     world.update();
+    //camera.center_on(world.player.pos);
+    camera.center_on(world.entities[0].pos);
 }
 
 void Game::render() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
 
-    world.render(renderer);
+    world.render(renderer, camera);
 
     SDL_RenderPresent(renderer);
 }

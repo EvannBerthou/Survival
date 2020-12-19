@@ -2,10 +2,12 @@
 
 #include <SDL2/SDL.h>
 #include "world.h"
+#include "camera.h"
 
 struct Game {
     SDL_Window *window;
     SDL_Renderer *renderer;
+    Camera camera;
     World world;
 
     bool running = true;
