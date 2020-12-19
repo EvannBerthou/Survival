@@ -6,6 +6,7 @@
 struct Entity {
     vec2<int> pos;
     vec2<int> vel;
+    SDL_Color color;
     int speed = 5;
 
     void update();
