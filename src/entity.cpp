@@ -1,11 +1,11 @@
 #include "entity.h"
+#include "render.h"
 
 void Entity::update() {
+    pos += vel;
 }
 
 void Entity::render(SDL_Renderer *renderer, int *offset) {
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0);
-    SDL_Rect rect = {x + offset[0], y + offset[1], 50, 50};
-    SDL_RenderFillRect(renderer, &rect);
+    render_rect(renderer, {pos.x + offset[0], pos.y + offset[1], 50, 50}, {255,0,0,255});
 }
 
