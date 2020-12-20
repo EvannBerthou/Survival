@@ -7,8 +7,8 @@ void Camera::center_on(vec2<int> center) {
 }
 
 void Camera::render_to_cam(SDL_Renderer *renderer, SDL_Rect rect, SDL_Color color) {
-    rect.x += pos.x - rect.w / 2;
-    rect.y += pos.y - rect.h / 2;
+    rect.x += pos.x;
+    rect.y += pos.y;
     render_rect(renderer, rect, color);
 }
 

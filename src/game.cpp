@@ -10,7 +10,7 @@ void Game::init() {
     renderer = sec(SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED),
                                 "Error while creating renderer");
     world = {};
-    world.player = {{20, 20}, {0,0}, {255,0,0,255}};
+    world.player = {{0, 150}, {0,0}, {255,0,0,255}};
     world.entities[0] = {{0, 0}, {0,0}, {255,255,0,255}};
     world.generate(0);
 }
@@ -42,7 +42,7 @@ void Game::event(SDL_Event *event) {
 
 void Game::update() {
     world.update();
-    camera.center_on(world.player.pos);
+    //camera.center_on(world.player.pos);
 }
 
 void Game::render() {

@@ -1,8 +1,14 @@
 #include "entity.h"
 #include "render.h"
 
-void Entity::update() {
-    pos += vel;
+void Entity::update(World *world) {
+    vec2<int> nextPos = pos + vel;
+    SDL_Rect rect = {nextPos.x, nextPos.y, ENTITY_SIZE, ENTITY_SIZE};
+    if (world->check_collision(rect)) {
+        return;
+    }
+
+    pos = nextPos;
 }
 
 void Entity::render(SDL_Renderer *renderer, int *offset) {

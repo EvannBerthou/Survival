@@ -40,9 +40,15 @@ Chunk *World::getChunkAt(vec2<int> pos) {
     return nullptr;
 }
 
-// TODO: Lorsqu'un nouveau chunk est affiché à l'écran, s'il n'est pas généré, alors le générer, sinon juste l'activer
+Tile *World::getTileAt(vec2<int> pos) {
+    Chunk *chunk = getChunkAt(getChunkPos(pos));
+    int x = pos.x % CHUNK_TILE_COUNT;
+    int y = pos.y % CHUNK_TILE_COUNT;
+    return &chunk->ground[x][y];
+}
+
 void World::update() {
-    player.update();
+    player.update(this);
     for (int y = -1; y <= 1; y++) {
         for (int x = -1; x <= 1; x++) {
             vec2<int> offset = {x,y};
@@ -67,7 +73,23 @@ void World::render(SDL_Renderer *renderer, Camera &camera) {
         camera.render_to_cam(renderer, entities[i].to_rect(), entities[i].color);
     }
 
+
+    vec2<int> p = {player.pos.x / TILE_SIZE, player.pos.y / TILE_SIZE};
+    for (int y = -1; y <= 1; y++) {
+        for (int x = -1; x <= 1; x++) {
+            vec2<int> offset = {x,y};
+            auto tile_pos = p + offset;
+            std::cout << p << tile_pos << std::endl;
+            SDL_Rect tile_rect = {tile_pos.x * TILE_SIZE + TILE_SIZE / 2, tile_pos.y * TILE_SIZE + TILE_SIZE / 2, TILE_SIZE, TILE_SIZE};
+            camera.render_to_cam(renderer, tile_rect, {255,0,255,255});
+            if (rect_collide(player.to_rect(), tile_rect)) {
+                camera.render_to_cam(renderer, tile_rect, {255,255,0,255});
+            }
+        }
+    }
+
     camera.render_to_cam(renderer, player.to_rect(), player.color);
+    camera.render_draw_rect(renderer, player.to_rect(), {255,255,255,255});
 }
 
 void World::move_player(SDL_Keycode code) {
@@ -86,4 +108,20 @@ void World::stop_player(SDL_Keycode code) {
     case SDLK_z: case SDLK_s: player.vel.y = 0; break;
     default: break;
     }
+}
+
+// Returns true if there is a collision otherwise returns false
+bool World::check_collision(SDL_Rect rect) {
+    vec2<int> p = {rect.x / TILE_SIZE, rect.y / TILE_SIZE};
+    for (int y = -1; y <= 1; y++) {
+        for (int x = -1; x <= 1; x++) {
+            vec2<int> offset = {x,y};
+            auto tile_pos = p + offset;
+            SDL_Rect tile_rect = {tile_pos.x * TILE_SIZE + TILE_SIZE / 2, tile_pos.y * TILE_SIZE + TILE_SIZE / 2, TILE_SIZE, TILE_SIZE};
+            if (rect_collide(rect, tile_rect) && getTileAt(tile_pos)->collide) {
+                return true;
+            }
+        }
+    }
+    return false;
 }

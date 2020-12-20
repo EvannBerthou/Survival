@@ -1,13 +1,14 @@
 #pragma once
 
 #include <SDL2/SDL.h>
-#include "entity.h"
 #include "camera.h"
+#include "entity.h"
 #include "chunk.h"
 
 #define MAX_WORLD_ENTITIES 100
 #define MAX_CHUNKS 1024
 
+struct Entity;
 struct World {
     char *name;
     Entity player;
@@ -26,4 +27,9 @@ struct World {
     void generate(time_t seed);
     void addChunk(vec2<int> pos);
     Chunk *getChunkAt(vec2<int> pos);
+    Tile *getTileAt(vec2<int> pos);
+
+    bool check_collision(SDL_Rect rect);
 };
+
+
