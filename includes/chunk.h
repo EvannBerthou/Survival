@@ -5,7 +5,7 @@
 #include "maths.h"
 
 #define CHUNK_TILE_COUNT 16
-#define TILE_SIZE 48
+#define TILE_SIZE 32
 #define CHUNK_SIZE (CHUNK_TILE_COUNT * TILE_SIZE)
 
 struct Chunk {

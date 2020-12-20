@@ -62,8 +62,10 @@ void Chunk::render(SDL_Renderer *renderer, Camera &camera) {
         }
     }
 
+    /*
     SDL_Rect outline = {to_world(pos.x, 0) - TILE_SIZE / 2,
                         to_world(pos.y, 0) - TILE_SIZE / 2,
                         CHUNK_SIZE, CHUNK_SIZE};
     camera.render_draw_rect(renderer, outline, {255,255,255,255});
+    */
 }

@@ -66,6 +66,7 @@ void World::render(SDL_Renderer *renderer, Camera &camera) {
     for (int i = 0; i < entity_count; i++) {
         camera.render_to_cam(renderer, entities[i].to_rect(), entities[i].color);
     }
+
     camera.render_to_cam(renderer, player.to_rect(), player.color);
 }
 
