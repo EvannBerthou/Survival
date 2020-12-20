@@ -1,11 +1,30 @@
 #include <iostream>
+#include <time.h>
+#include <stdlib.h>
 #include "world.h"
+#include "chunk.h"
+
+void World::generate(time_t seed) {
+    srand(seed);
+    int index = 0;
+    for (int y = -1; y <= 1; y++) {
+        for (int x = -1; x <= 1; x++) {
+            chunks[index].pos = {x,y};
+            chunks[index].generate();
+            index++;
+        }
+    }
+}
 
 void World::update() {
     player.update();
 }
 
 void World::render(SDL_Renderer *renderer, Camera &camera) {
+    for (int i = 0; i < 9; i++) {
+        chunks[i].render(renderer, camera);
+    }
+
     for (int i = 0; i < entity_count; i++) {
         camera.render_to_cam(renderer, entities[i].to_rect(), entities[i].color);
     }

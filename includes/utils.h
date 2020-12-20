@@ -19,3 +19,8 @@ inline T *sec(T *ptr, const char *msg) {
     }
     return ptr;
 }
+
+inline int random(int a, int b) {
+    return (rand() % (b - a + 1) + a);
+}
+

@@ -11,3 +11,9 @@ void Camera::render_to_cam(SDL_Renderer *renderer, SDL_Rect rect, SDL_Color colo
     rect.y += pos.y - rect.h / 2;
     render_rect(renderer, rect, color);
 }
+
+void Camera::render_draw_rect(SDL_Renderer *renderer, SDL_Rect rect, SDL_Color color) {
+    rect.x += pos.x;
+    rect.y += pos.y;
+    render_outline(renderer, rect, color);
+}

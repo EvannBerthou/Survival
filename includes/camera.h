@@ -9,4 +9,5 @@ struct Camera {
 
     void center_on(vec2<int> center);
     void render_to_cam(SDL_Renderer *renderer, SDL_Rect rect, SDL_Color color);
+    void render_draw_rect(SDL_Renderer *renderer, SDL_Rect rect, SDL_Color color);
 };
