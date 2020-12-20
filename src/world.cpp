@@ -5,6 +5,7 @@
 #include "world.h"
 #include "chunk.h"
 #include "perlin.h"
+#include "utils.h"
 
 void World::generate(time_t seed) {
     srand(seed);
@@ -33,18 +34,7 @@ vec2i screenToGrid(vec2i screen) {
     return {(int)std::floor(screen.x / (float)TILE_SIZE), (int)std::floor(screen.y / (float)TILE_SIZE)};
 }
 
-Chunk *World::getChunkAt(vec2i pos) {
-    for (int i = 0; i < MAX_CHUNKS; i++) {
-        if (chunks[i].pos == pos) {
-            return &chunks[i];
-        }
-    }
-
-    return nullptr;
-}
-
-Tile *World::getTileAt(vec2i pos) {
-    Chunk *chunk = getChunkAt(getChunkPos(pos));
+vec2i posInChunk(vec2i pos) {
     int x = pos.x;
     int y = pos.y;
 
@@ -58,8 +48,23 @@ Tile *World::getTileAt(vec2i pos) {
 
     x %= CHUNK_TILE_COUNT;
     y %= CHUNK_TILE_COUNT;
+    return vec2i(x,y);
+}
 
-    return &chunk->ground[x][y];
+Chunk *World::getChunkAt(vec2i pos) {
+    for (int i = 0; i < MAX_CHUNKS; i++) {
+        if (chunks[i].pos == pos) {
+            return &chunks[i];
+        }
+    }
+
+    return nullptr;
+}
+
+Tile *World::getTileAt(vec2i pos) {
+    Chunk *chunk = getChunkAt(getChunkPos(pos));
+    vec2i v = posInChunk(pos);
+    return &chunk->ground[v.x][v.y];
 }
 
 void World::update() {
@@ -74,7 +79,7 @@ void World::update() {
     }
 }
 
-void World::render(SDL_Renderer *renderer, Camera &camera, bool debug) {
+void World::render(SDL_Renderer *renderer, Camera &camera, TTF_Font *font, bool debug) {
     for (int y = -1; y <= 1; y++) {
         for (int x = -1; x <= 1; x++) {
             auto chunkPos = getChunkPos(screenToGrid(player.pos)) + vec2i(x,y);
@@ -86,23 +91,27 @@ void World::render(SDL_Renderer *renderer, Camera &camera, bool debug) {
         camera.render_to_cam(renderer, entities[i].to_rect(), entities[i].color);
     }
 
-
     camera.render_to_cam(renderer, player.to_rect(), player.color);
     if (debug) {
-        vec2i p((player.pos.x / TILE_SIZE), (player.pos.y / TILE_SIZE));
-        for (int y = -1; y <= 1; y++) {
-            for (int x = -1; x <= 1; x++) {
-                auto tile_pos = p + vec2i(x,y);
-                SDL_Rect tile_rect = {tile_pos.x * TILE_SIZE, tile_pos.y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
-                camera.render_to_cam(renderer, tile_rect, {255,0,255,255});
-                if (rect_collide(player.to_rect(), tile_rect)) {
-                    camera.render_to_cam(renderer, tile_rect, {255,255,0,255});
-                }
-            }
-        }
-
-        camera.render_draw_rect(renderer, player.to_rect(), {255,255,255,255});
+        render_debug(renderer, font);
     }
+}
+
+
+void World::render_debug(SDL_Renderer *renderer, TTF_Font *font) {
+    render_text(renderer, font,
+            "Player : " + player.pos.to_str() +
+                "(" + screenToGrid(player.pos).to_str() + ")",
+            vec2i(0,0), {255,128,128,255});
+
+    render_text(renderer, font,
+            "Chunk : " + getChunkPos(screenToGrid(player.pos)).to_str() +
+                "(" + posInChunk(screenToGrid(player.pos)).to_str() + ")",
+            vec2i(0,40), {255,128,128,255});
+
+    render_text(renderer, font,
+            "Vel : " + player.vel.to_str(),
+            vec2i(0,80), {255,128,128,255});
 }
 
 void World::move_player(SDL_Keycode code) {

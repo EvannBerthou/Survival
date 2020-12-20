@@ -23,6 +23,10 @@ struct vec2 {
     bool operator==(const vec2<T>& other) {
         return (x == other.x && y == other.y);
     }
+
+    std::string to_str() {
+        return "[" + std::to_string(x) + "," + std::to_string(y) + "]";
+    }
 };
 
 using vec2i = vec2<int>;
@@ -30,7 +34,7 @@ using vec2f = vec2<float>;
 
 template <typename T>
 std::ostream& operator<<(std::ostream& os, vec2<T> v) {
-    os << "[" << v.x << "," << v.y << "]";
+    os << v.to_str();
     return os;
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include "camera.h"
 #include "entity.h"
 #include "chunk.h"
@@ -19,7 +20,8 @@ struct World {
     int chunk_count  = 0;
 
     void update();
-    void render(SDL_Renderer *renderer, Camera &camera, bool debug);
+    void render(SDL_Renderer *renderer, Camera &camera, TTF_Font *font, bool debug);
+    void render_debug(SDL_Renderer *renderer, TTF_Font *font);
 
     void move_player(SDL_Keycode code);
     void stop_player(SDL_Keycode code);

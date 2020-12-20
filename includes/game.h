@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include "world.h"
 #include "camera.h"
 
@@ -9,9 +10,10 @@ struct Game {
     SDL_Renderer *renderer;
     Camera camera;
     World world;
+    TTF_Font *font;
 
     bool running = true;
-    bool debug = false;
+    bool debug = true;
 
     void init();
     void run();

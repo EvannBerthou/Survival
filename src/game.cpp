@@ -9,6 +9,10 @@ void Game::init() {
                 "Error while creating window");
     renderer = sec(SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED),
                                 "Error while creating renderer");
+
+    sec(TTF_Init(), "Error while loading TTF");
+    font = sec(TTF_OpenFont("assets/font.ttf", 38), "Error while loading font");
+
     world = {};
     world.player = {{0, 150}, {0,0}, {255,0,0,255}};
     world.entities[0] = {{0, 0}, {0,0}, {255,255,0,255}};
@@ -31,7 +35,12 @@ void Game::event(SDL_Event *event) {
             this->running = false;
             break;
         case SDL_KEYDOWN:
-            world.move_player(event->key.keysym.sym);
+            if (event->key.keysym.sym == SDLK_TAB) {
+                debug = !debug;
+            }
+            else {
+                world.move_player(event->key.keysym.sym);
+            }
             break;
         case SDL_KEYUP:
             world.stop_player(event->key.keysym.sym);
@@ -49,7 +58,7 @@ void Game::render() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
 
-    world.render(renderer, camera, debug);
+    world.render(renderer, camera, font, debug);
 
     SDL_RenderPresent(renderer);
 }
@@ -57,5 +66,7 @@ void Game::render() {
 
 void Game::close() {
     std::cout << "Closing game" << std::endl;
+    TTF_CloseFont(font);
+    TTF_Quit();
     SDL_Quit();
 }
