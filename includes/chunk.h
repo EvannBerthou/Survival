@@ -4,12 +4,13 @@
 #include "camera.h"
 #include "maths.h"
 
-#define CHUNCK_SIZE 16
+#define CHUNK_TILE_COUNT 16
 #define TILE_SIZE 32
+#define CHUNK_SIZE (CHUNK_TILE_COUNT * TILE_SIZE)
 
-struct Chunck {
+struct Chunk {
     vec2<int> pos;
-    int ground[CHUNCK_SIZE][CHUNCK_SIZE];
+    int ground[CHUNK_TILE_COUNT][CHUNK_TILE_COUNT];
 
     void generate();
     void render(SDL_Renderer *renderer, Camera &camera);
