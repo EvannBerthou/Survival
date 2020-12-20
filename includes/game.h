@@ -11,6 +11,7 @@ struct Game {
     World world;
 
     bool running = true;
+    bool debug = false;
 
     void init();
     void run();

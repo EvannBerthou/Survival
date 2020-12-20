@@ -7,10 +7,10 @@
 
 struct World;
 struct Entity {
-    vec2<int> pos;
-    vec2<int> vel;
+    vec2i pos;
+    vec2i vel;
     SDL_Color color;
-    int speed = 1;
+    int speed = 5;
 
     void update(World *world);
     void render(SDL_Renderer *renderer);

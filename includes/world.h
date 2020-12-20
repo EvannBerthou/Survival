@@ -15,19 +15,19 @@ struct World {
     Entity entities[MAX_WORLD_ENTITIES];
     Chunk chunks[MAX_CHUNKS];
 
-    int entity_count = 1;
+    int entity_count = 0;
     int chunk_count  = 0;
 
     void update();
-    void render(SDL_Renderer *renderer, Camera &camera);
+    void render(SDL_Renderer *renderer, Camera &camera, bool debug);
 
     void move_player(SDL_Keycode code);
     void stop_player(SDL_Keycode code);
 
     void generate(time_t seed);
-    void addChunk(vec2<int> pos);
-    Chunk *getChunkAt(vec2<int> pos);
-    Tile *getTileAt(vec2<int> pos);
+    void addChunk(vec2i pos);
+    Chunk *getChunkAt(vec2i pos);
+    Tile *getTileAt(vec2i pos);
 
     bool check_collision(SDL_Rect rect);
 };

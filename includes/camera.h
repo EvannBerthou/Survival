@@ -5,9 +5,9 @@
 
 
 struct Camera {
-    vec2<int> pos;
+    vec2i pos;
 
-    void center_on(vec2<int> center);
+    void center_on(vec2i center);
     void render_to_cam(SDL_Renderer *renderer, SDL_Rect rect, SDL_Color color);
     void render_draw_rect(SDL_Renderer *renderer, SDL_Rect rect, SDL_Color color);
 };

@@ -6,6 +6,10 @@ template <typename T>
 struct vec2 {
     T x,y;
 
+    vec2<T>() = default;
+    vec2<T>(T _x, T _y) : x(_x), y(_y)
+    {}
+
     vec2<T> operator+(const vec2<T>& other) {
         return {x + other.x, y + other.y};
     }
@@ -20,6 +24,9 @@ struct vec2 {
         return (x == other.x && y == other.y);
     }
 };
+
+using vec2i = vec2<int>;
+using vec2f = vec2<float>;
 
 template <typename T>
 std::ostream& operator<<(std::ostream& os, vec2<T> v) {

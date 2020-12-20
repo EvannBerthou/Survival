@@ -10,9 +10,9 @@
 #define CHUNK_SIZE (CHUNK_TILE_COUNT * TILE_SIZE)
 
 struct Chunk {
-    vec2<int> pos;
+    vec2i pos;
     Tile ground[CHUNK_TILE_COUNT][CHUNK_TILE_COUNT];
 
     void generate();
-    void render(SDL_Renderer *renderer, Camera &camera);
+    void render(SDL_Renderer *renderer, Camera &camera, bool debug);
 };

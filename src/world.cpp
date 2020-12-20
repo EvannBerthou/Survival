@@ -16,7 +16,7 @@ void World::generate(time_t seed) {
     }
 }
 
-void World::addChunk(vec2<int> pos) {
+void World::addChunk(vec2i pos) {
     std::cout << "New chunk at " << pos << std::endl;
     if (chunk_count < MAX_CHUNKS) {
         chunks[chunk_count].pos = pos;
@@ -25,12 +25,15 @@ void World::addChunk(vec2<int> pos) {
     }
 }
 
-vec2<int> getChunkPos(vec2<int> pos) {
-    return {(int)std::floor((pos.x / (float)CHUNK_SIZE)),
-            (int)std::floor((pos.y / (float)CHUNK_SIZE))};
+vec2i getChunkPos(vec2i pos) {
+    return {(int)std::floor(pos.x / (float)CHUNK_TILE_COUNT), (int)std::floor(pos.y / (float)CHUNK_TILE_COUNT)};
 }
 
-Chunk *World::getChunkAt(vec2<int> pos) {
+vec2i screenToGrid(vec2i screen) {
+    return {(int)std::floor(screen.x / (float)TILE_SIZE), (int)std::floor(screen.y / (float)TILE_SIZE)};
+}
+
+Chunk *World::getChunkAt(vec2i pos) {
     for (int i = 0; i < MAX_CHUNKS; i++) {
         if (chunks[i].pos == pos) {
             return &chunks[i];
@@ -40,10 +43,22 @@ Chunk *World::getChunkAt(vec2<int> pos) {
     return nullptr;
 }
 
-Tile *World::getTileAt(vec2<int> pos) {
+Tile *World::getTileAt(vec2i pos) {
     Chunk *chunk = getChunkAt(getChunkPos(pos));
-    int x = pos.x % CHUNK_TILE_COUNT;
-    int y = pos.y % CHUNK_TILE_COUNT;
+    int x = pos.x;
+    int y = pos.y;
+
+    if (pos.x < 0) {
+        x = CHUNK_TILE_COUNT - ((-pos.x) % CHUNK_TILE_COUNT);
+    }
+
+    if (pos.y < 0) {
+        y = CHUNK_TILE_COUNT - ((-pos.y) % CHUNK_TILE_COUNT);
+    }
+
+    x %= CHUNK_TILE_COUNT;
+    y %= CHUNK_TILE_COUNT;
+
     return &chunk->ground[x][y];
 }
 
@@ -51,8 +66,7 @@ void World::update() {
     player.update(this);
     for (int y = -1; y <= 1; y++) {
         for (int x = -1; x <= 1; x++) {
-            vec2<int> offset = {x,y};
-            vec2<int> chunkPos = getChunkPos(player.pos) + offset;
+            auto chunkPos = getChunkPos(screenToGrid(player.pos)) + vec2i(x,y);
             if (getChunkAt(chunkPos) == nullptr) {
                 addChunk(chunkPos);
             }
@@ -60,12 +74,11 @@ void World::update() {
     }
 }
 
-void World::render(SDL_Renderer *renderer, Camera &camera) {
+void World::render(SDL_Renderer *renderer, Camera &camera, bool debug) {
     for (int y = -1; y <= 1; y++) {
         for (int x = -1; x <= 1; x++) {
-            vec2<int> offset = {x,y};
-            vec2<int> chunkPos = getChunkPos(player.pos) + offset;
-            getChunkAt(chunkPos)->render(renderer, camera);
+            auto chunkPos = getChunkPos(screenToGrid(player.pos)) + vec2i(x,y);
+            getChunkAt(chunkPos)->render(renderer, camera, debug);
         }
     }
 
@@ -74,22 +87,22 @@ void World::render(SDL_Renderer *renderer, Camera &camera) {
     }
 
 
-    vec2<int> p = {player.pos.x / TILE_SIZE, player.pos.y / TILE_SIZE};
-    for (int y = -1; y <= 1; y++) {
-        for (int x = -1; x <= 1; x++) {
-            vec2<int> offset = {x,y};
-            auto tile_pos = p + offset;
-            std::cout << p << tile_pos << std::endl;
-            SDL_Rect tile_rect = {tile_pos.x * TILE_SIZE + TILE_SIZE / 2, tile_pos.y * TILE_SIZE + TILE_SIZE / 2, TILE_SIZE, TILE_SIZE};
-            camera.render_to_cam(renderer, tile_rect, {255,0,255,255});
-            if (rect_collide(player.to_rect(), tile_rect)) {
-                camera.render_to_cam(renderer, tile_rect, {255,255,0,255});
+    camera.render_to_cam(renderer, player.to_rect(), player.color);
+    if (debug) {
+        vec2i p((player.pos.x / TILE_SIZE), (player.pos.y / TILE_SIZE));
+        for (int y = -1; y <= 1; y++) {
+            for (int x = -1; x <= 1; x++) {
+                auto tile_pos = p + vec2i(x,y);
+                SDL_Rect tile_rect = {tile_pos.x * TILE_SIZE, tile_pos.y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
+                camera.render_to_cam(renderer, tile_rect, {255,0,255,255});
+                if (rect_collide(player.to_rect(), tile_rect)) {
+                    camera.render_to_cam(renderer, tile_rect, {255,255,0,255});
+                }
             }
         }
-    }
 
-    camera.render_to_cam(renderer, player.to_rect(), player.color);
-    camera.render_draw_rect(renderer, player.to_rect(), {255,255,255,255});
+        camera.render_draw_rect(renderer, player.to_rect(), {255,255,255,255});
+    }
 }
 
 void World::move_player(SDL_Keycode code) {
@@ -112,12 +125,11 @@ void World::stop_player(SDL_Keycode code) {
 
 // Returns true if there is a collision otherwise returns false
 bool World::check_collision(SDL_Rect rect) {
-    vec2<int> p = {rect.x / TILE_SIZE, rect.y / TILE_SIZE};
+    vec2i p = screenToGrid(vec2i(rect.x, rect.y));
     for (int y = -1; y <= 1; y++) {
         for (int x = -1; x <= 1; x++) {
-            vec2<int> offset = {x,y};
-            auto tile_pos = p + offset;
-            SDL_Rect tile_rect = {tile_pos.x * TILE_SIZE + TILE_SIZE / 2, tile_pos.y * TILE_SIZE + TILE_SIZE / 2, TILE_SIZE, TILE_SIZE};
+            auto tile_pos = p + vec2i(x,y);
+            SDL_Rect tile_rect = {tile_pos.x * TILE_SIZE, tile_pos.y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
             if (rect_collide(rect, tile_rect) && getTileAt(tile_pos)->collide) {
                 return true;
             }
