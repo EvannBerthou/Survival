@@ -5,12 +5,12 @@
 #include "maths.h"
 
 #define CHUNK_TILE_COUNT 16
-#define TILE_SIZE 32
+#define TILE_SIZE 48
 #define CHUNK_SIZE (CHUNK_TILE_COUNT * TILE_SIZE)
 
 struct Chunk {
     vec2<int> pos;
-    int ground[CHUNK_TILE_COUNT][CHUNK_TILE_COUNT];
+    SDL_Color ground[CHUNK_TILE_COUNT][CHUNK_TILE_COUNT];
 
     void generate();
     void render(SDL_Renderer *renderer, Camera &camera);

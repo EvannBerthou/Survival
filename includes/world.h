@@ -6,7 +6,7 @@
 #include "chunk.h"
 
 #define MAX_WORLD_ENTITIES 100
-#define MAX_CHUNKS 256
+#define MAX_CHUNKS 1024
 
 struct World {
     char *name;

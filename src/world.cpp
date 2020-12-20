@@ -4,10 +4,11 @@
 #include <stdlib.h>
 #include "world.h"
 #include "chunk.h"
+#include "perlin.h"
 
 void World::generate(time_t seed) {
-    std::cout << sizeof(Chunk) << std::endl;
     srand(seed);
+    set_seed(seed);
     for (int y = -1; y <= 1; y++) {
         for (int x = -1; x <= 1; x++) {
             addChunk({x,y});

@@ -1,5 +1,5 @@
 PKGS=sdl2 SDL2_ttf SDL2_image
-CXXFLAGS=-Wall -Wextra -g 
+CXXFLAGS=-Wall -Wextra -g
 LIBS=$(shell pkg-config --libs $(PKGS)) -lm
 
 SRCS=$(wildcard src/*.cpp)
