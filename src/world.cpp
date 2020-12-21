@@ -88,10 +88,10 @@ void World::render(SDL_Renderer *renderer, Camera &camera, TTF_Font *font, bool 
     }
 
     for (int i = 0; i < entity_count; i++) {
-        camera.render_to_cam(renderer, entities[i].to_rect(), entities[i].color);
+        entities[i].render(renderer, camera);
     }
+    player.render(renderer, camera);
 
-    camera.render_to_cam(renderer, player.to_rect(), player.color);
     if (debug) {
         render_debug(renderer, font);
     }
@@ -138,8 +138,8 @@ bool World::check_collision(SDL_Rect rect) {
     for (int y = -1; y <= 1; y++) {
         for (int x = -1; x <= 1; x++) {
             auto tile_pos = p + vec2i(x,y);
-            SDL_Rect tile_rect = {tile_pos.x * TILE_SIZE, tile_pos.y * TILE_SIZE, TILE_SIZE, TILE_SIZE};
-            if (rect_collide(rect, tile_rect) && getTileAt(tile_pos)->collide) {
+            Rect r(tile_pos * TILE_SIZE, TILE_SIZE);
+            if (rect_collide(rect, r.to_sdl()) && getTileAt(tile_pos)->collide) {
                 return true;
             }
         }

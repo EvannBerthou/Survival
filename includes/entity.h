@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL.h>
 #include "maths.h"
+#include "camera.h"
 
 #define ENTITY_SIZE 16
 
@@ -13,8 +14,7 @@ struct Entity {
     int speed = 5;
 
     void update(World *world);
-    void render(SDL_Renderer *renderer);
-    void render(SDL_Renderer *renderer, int *offset);
+    void render(SDL_Renderer *renderer, Camera &camera);
     SDL_Rect to_rect();
 };
 

@@ -31,7 +31,7 @@ Tile tile_from_grey(vec2i pos, double grey) {
                 vec2i tile_pos = {pos.x + x, pos.y + y};
                 double grey = perlin2d(tile_pos.x, tile_pos.y, 0.05, 4);
                 if (grey <= 0.3 && valid_water(tile_pos)) {
-                    return {{128, 128, 0, 255}, 0};
+                    return {{200, 200, 0, 255}, 0};
                 }
             }
         }
