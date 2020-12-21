@@ -39,12 +39,16 @@ inline vec2i screenToGrid(vec2i screen) {
     return {(int)std::floor(screen.x / (float)TILE_SIZE), (int)std::floor(screen.y / (float)TILE_SIZE)};
 }
 
-inline vec2<int> to_world(vec2i pos) {
+inline vec2i to_world(vec2i pos) {
     return (pos * TILE_SIZE);
 }
 
-inline vec2<int> chunk_to_world(vec2i pos) {
+inline vec2i chunk_to_world(vec2i pos) {
     return (pos * CHUNK_SIZE);
+}
+
+inline vec2i snap_to_grid(vec2i pos) {
+    return screenToGrid(pos) * TILE_SIZE;
 }
 
 vec2i posInChunk(vec2i pos);

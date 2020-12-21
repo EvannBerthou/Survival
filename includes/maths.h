@@ -13,6 +13,11 @@ struct vec2 {
         return {x + other.x, y + other.y};
     }
 
+    vec2<T> operator-(const vec2<T>& other) {
+        return {x - other.x, y - other.y};
+    }
+
+
     vec2<T> operator+=(const vec2<T>& other) {
         x += other.x;
         y += other.y;
@@ -23,7 +28,11 @@ struct vec2 {
         return {x * s, y * s};
     }
 
-    vec2<T> operator+=(T s) {
+    vec2<T> operator/(T s) {
+        return {x / s, y / s};
+    }
+
+    vec2<T> operator*=(T s) {
         x *= s;
         y *= s;
         return *this;

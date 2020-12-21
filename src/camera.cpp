@@ -17,3 +17,8 @@ void Camera::render_draw_rect(SDL_Renderer *renderer, SDL_Rect rect, SDL_Color c
     rect.y += pos.y;
     render_outline(renderer, rect, color);
 }
+
+
+vec2i Camera::project(vec2i screen) {
+    return screen - pos;
+}

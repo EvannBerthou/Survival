@@ -4,6 +4,7 @@
 #include <SDL2/SDL_ttf.h>
 #include "world.h"
 #include "camera.h"
+#include "maths.h"
 
 struct Game {
     SDL_Window *window;
@@ -11,6 +12,7 @@ struct Game {
     Camera camera;
     World world;
     TTF_Font *font;
+    vec2i mouse;
 
     bool running = true;
     bool debug = true;

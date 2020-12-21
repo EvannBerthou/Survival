@@ -1,6 +1,7 @@
 #include "game.h"
 #include "utils.h"
 #include "world.h"
+#include "render.h"
 
 void Game::init() {
     sec(SDL_Init(SDL_INIT_VIDEO), "Error while initializing SDL");
@@ -11,10 +12,10 @@ void Game::init() {
                                 "Error while creating renderer");
 
     sec(TTF_Init(), "Error while loading TTF");
-    font = sec(TTF_OpenFont("assets/font.ttf", 38), "Error while loading font");
+    font = sec(TTF_OpenFont("assets/font.ttf", 28), "Error while loading font");
 
     world = {};
-    world.player = {{0, 150}, {0,0}, {255,0,0,255}};
+    world.player = {{300, 150}, {0,0}, {255,0,0,255}};
     world.entities[0] = {{0, 0}, {0,0}, {255,255,0,255}};
     world.generate(0);
 }
@@ -47,6 +48,7 @@ void Game::event(SDL_Event *event) {
             break;
         }
     }
+    SDL_GetMouseState(&mouse.x, &mouse.y);
 }
 
 void Game::update() {
@@ -81,6 +83,9 @@ void Game::render_debug() {
         camera.render_draw_rect(renderer, outline, {255,0,0,255});
     }
 
+    auto p = snap_to_grid(camera.project(mouse));
+    SDL_Rect hover = Rect(p, TILE_SIZE).to_sdl();
+    camera.render_to_cam(renderer, hover, {255,0,255,255});
 
     Entity &player = world.player;
     render_text(renderer, font,
@@ -96,6 +101,20 @@ void Game::render_debug() {
     render_text(renderer, font,
             "Vel : " + player.vel.to_str(),
             vec2i(0,80), {255,128,128,255});
+
+    Tile *t = world.getTileAt(screenToGrid(p));
+    render_text(renderer, font,
+            "Tile : " +
+                std::to_string((int)t->color.r) + " " +
+                std::to_string((int)t->color.g) + " " +
+                std::to_string((int)t->color.b) + " " +
+            "(" + std::to_string(t->collide) + ")",
+            vec2i(0,120), {255,128,128,255});
+
+    render_text(renderer, font,
+            "Mouse : " + mouse.to_str() +
+                "(" + screenToGrid(p).to_str() + ")",
+            vec2i(0,560), {255,128,128,255});
 }
 
 void Game::close() {

@@ -35,3 +35,4 @@ vec2i posInChunk(vec2i pos) {
     y %= CHUNK_TILE_COUNT;
     return vec2i(x,y);
 }
+
