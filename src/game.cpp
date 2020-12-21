@@ -58,11 +58,45 @@ void Game::render() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
 
-    world.render(renderer, camera, font, debug);
+    world.render(renderer, camera);
+
+    if (debug) {
+        render_debug();
+    }
 
     SDL_RenderPresent(renderer);
 }
 
+void Game::render_debug() {
+    for (int i = 0; i < world.chunk_count; i++) {
+        Chunk *c = &world.chunks[i];
+        vec2i pos = chunk_to_world(c->pos);
+        for (int y = 0; y < CHUNK_TILE_COUNT; y++) {
+            for (int x = 0; x < CHUNK_TILE_COUNT; x++) {
+                SDL_Rect rect = Rect(pos + to_world(vec2i(x,y)), TILE_SIZE).to_sdl();
+                camera.render_draw_rect(renderer, rect, {255,255,255,255});
+            }
+        }
+        SDL_Rect outline = Rect(pos, CHUNK_SIZE).to_sdl();
+        camera.render_draw_rect(renderer, outline, {255,0,0,255});
+    }
+
+
+    Entity &player = world.player;
+    render_text(renderer, font,
+            "Player : " + player.pos.to_str() +
+                "(" + screenToGrid(world.player.pos).to_str() + ")",
+            vec2i(0,0), {255,128,128,255});
+
+    render_text(renderer, font,
+            "Chunk : " + getChunkPos(screenToGrid(player.pos)).to_str() +
+                "(" + posInChunk(screenToGrid(player.pos)).to_str() + ")",
+            vec2i(0,40), {255,128,128,255});
+
+    render_text(renderer, font,
+            "Vel : " + player.vel.to_str(),
+            vec2i(0,80), {255,128,128,255});
+}
 
 void Game::close() {
     std::cout << "Closing game" << std::endl;

@@ -51,28 +51,11 @@ void Chunk::generate() {
     }
 }
 
-inline int to_world(int x, int dx) {
-    return (x * CHUNK_SIZE + dx * TILE_SIZE);
-}
-
-void Chunk::render(SDL_Renderer *renderer, Camera &camera, bool debug) {
+void Chunk::render(SDL_Renderer *renderer, Camera &camera) {
     for (int y = 0; y < CHUNK_TILE_COUNT; y++) {
         for (int x = 0; x < CHUNK_TILE_COUNT; x++) {
-            SDL_Rect rect = {to_world(pos.x, x), to_world(pos.y, y), TILE_SIZE, TILE_SIZE};
+            SDL_Rect rect = Rect(chunk_to_world(pos) + to_world(vec2i(x,y)), TILE_SIZE).to_sdl();
             camera.render_to_cam(renderer, rect, ground[x][y].color);
         }
-    }
-
-    if (debug) {
-        for (int y = 0; y < CHUNK_TILE_COUNT; y++) {
-            for (int x = 0; x < CHUNK_TILE_COUNT; x++) {
-                SDL_Rect rect = {to_world(pos.x, x), to_world(pos.y, y), TILE_SIZE, TILE_SIZE};
-                camera.render_draw_rect(renderer, rect, {255,255,255,255});
-            }
-        }
-
-        SDL_Rect outline = {to_world(pos.x, 0), to_world(pos.y, 0),
-                            CHUNK_SIZE, CHUNK_SIZE};
-        camera.render_draw_rect(renderer, outline, {255,0,0,255});
     }
 }

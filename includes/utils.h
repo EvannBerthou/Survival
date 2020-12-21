@@ -3,6 +3,7 @@
 #include <iostream>
 #include <SDL2/SDL_ttf.h>
 #include "maths.h"
+#include "world.h"
 
 // SDL Error Checker
 inline int sec(int code, const char *msg) {
@@ -29,3 +30,21 @@ inline int random(int a, int b) {
 
 int render_text(SDL_Renderer *renderer, TTF_Font *font,
                 std::string str, vec2i pos, SDL_Color color);
+
+inline vec2i getChunkPos(vec2i pos) {
+    return {(int)std::floor(pos.x / (float)CHUNK_TILE_COUNT), (int)std::floor(pos.y / (float)CHUNK_TILE_COUNT)};
+}
+
+inline vec2i screenToGrid(vec2i screen) {
+    return {(int)std::floor(screen.x / (float)TILE_SIZE), (int)std::floor(screen.y / (float)TILE_SIZE)};
+}
+
+inline vec2<int> to_world(vec2i pos) {
+    return (pos * TILE_SIZE);
+}
+
+inline vec2<int> chunk_to_world(vec2i pos) {
+    return (pos * CHUNK_SIZE);
+}
+
+vec2i posInChunk(vec2i pos);

@@ -18,3 +18,20 @@ int render_text(SDL_Renderer *renderer, TTF_Font *font,
     SDL_DestroyTexture(texture);
     return 1;
 }
+
+vec2i posInChunk(vec2i pos) {
+    int x = pos.x;
+    int y = pos.y;
+
+    if (pos.x < 0) {
+        x = CHUNK_TILE_COUNT - ((-pos.x) % CHUNK_TILE_COUNT);
+    }
+
+    if (pos.y < 0) {
+        y = CHUNK_TILE_COUNT - ((-pos.y) % CHUNK_TILE_COUNT);
+    }
+
+    x %= CHUNK_TILE_COUNT;
+    y %= CHUNK_TILE_COUNT;
+    return vec2i(x,y);
+}

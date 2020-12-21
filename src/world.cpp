@@ -26,31 +26,6 @@ void World::addChunk(vec2i pos) {
     }
 }
 
-vec2i getChunkPos(vec2i pos) {
-    return {(int)std::floor(pos.x / (float)CHUNK_TILE_COUNT), (int)std::floor(pos.y / (float)CHUNK_TILE_COUNT)};
-}
-
-vec2i screenToGrid(vec2i screen) {
-    return {(int)std::floor(screen.x / (float)TILE_SIZE), (int)std::floor(screen.y / (float)TILE_SIZE)};
-}
-
-vec2i posInChunk(vec2i pos) {
-    int x = pos.x;
-    int y = pos.y;
-
-    if (pos.x < 0) {
-        x = CHUNK_TILE_COUNT - ((-pos.x) % CHUNK_TILE_COUNT);
-    }
-
-    if (pos.y < 0) {
-        y = CHUNK_TILE_COUNT - ((-pos.y) % CHUNK_TILE_COUNT);
-    }
-
-    x %= CHUNK_TILE_COUNT;
-    y %= CHUNK_TILE_COUNT;
-    return vec2i(x,y);
-}
-
 Chunk *World::getChunkAt(vec2i pos) {
     for (int i = 0; i < MAX_CHUNKS; i++) {
         if (chunks[i].pos == pos) {
@@ -79,11 +54,11 @@ void World::update() {
     }
 }
 
-void World::render(SDL_Renderer *renderer, Camera &camera, TTF_Font *font, bool debug) {
+void World::render(SDL_Renderer *renderer, Camera &camera) {
     for (int y = -1; y <= 1; y++) {
         for (int x = -1; x <= 1; x++) {
             auto chunkPos = getChunkPos(screenToGrid(player.pos)) + vec2i(x,y);
-            getChunkAt(chunkPos)->render(renderer, camera, debug);
+            getChunkAt(chunkPos)->render(renderer, camera);
         }
     }
 
@@ -91,28 +66,9 @@ void World::render(SDL_Renderer *renderer, Camera &camera, TTF_Font *font, bool 
         entities[i].render(renderer, camera);
     }
     player.render(renderer, camera);
-
-    if (debug) {
-        render_debug(renderer, font);
-    }
 }
 
 
-void World::render_debug(SDL_Renderer *renderer, TTF_Font *font) {
-    render_text(renderer, font,
-            "Player : " + player.pos.to_str() +
-                "(" + screenToGrid(player.pos).to_str() + ")",
-            vec2i(0,0), {255,128,128,255});
-
-    render_text(renderer, font,
-            "Chunk : " + getChunkPos(screenToGrid(player.pos)).to_str() +
-                "(" + posInChunk(screenToGrid(player.pos)).to_str() + ")",
-            vec2i(0,40), {255,128,128,255});
-
-    render_text(renderer, font,
-            "Vel : " + player.vel.to_str(),
-            vec2i(0,80), {255,128,128,255});
-}
 
 void World::move_player(SDL_Keycode code) {
     switch (code) {

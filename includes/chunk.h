@@ -14,5 +14,5 @@ struct Chunk {
     Tile ground[CHUNK_TILE_COUNT][CHUNK_TILE_COUNT];
 
     void generate();
-    void render(SDL_Renderer *renderer, Camera &camera, bool debug);
+    void render(SDL_Renderer *renderer, Camera &camera);
 };

@@ -20,5 +20,6 @@ struct Game {
     void event(SDL_Event *event);
     void update();
     void render();
+    void render_debug();
     void close();
 };
