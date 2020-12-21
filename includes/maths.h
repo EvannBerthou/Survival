@@ -68,6 +68,12 @@ struct Rect {
 };
 
 template <typename T>
+struct Maybe {
+    bool has;
+    T val;
+};
+
+template <typename T>
 std::ostream& operator<<(std::ostream& os, vec2<T> v) {
     os << v.to_str();
     return os;

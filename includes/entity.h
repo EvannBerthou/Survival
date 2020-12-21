@@ -16,6 +16,8 @@ struct Entity {
     void update(World *world);
     void render(SDL_Renderer *renderer, Camera &camera);
     SDL_Rect to_rect();
+
+    void collision(int cp, int gp, int *pp, int *vel);
 };
 
 #include "world.h"

@@ -43,6 +43,7 @@ Tile *World::getTileAt(vec2i pos) {
 }
 
 void World::update() {
+    move_player();
     player.update(this);
     for (int y = -1; y <= 1; y++) {
         for (int x = -1; x <= 1; x++) {
@@ -70,35 +71,24 @@ void World::render(SDL_Renderer *renderer, Camera &camera) {
 
 
 
-void World::move_player(SDL_Keycode code) {
-    switch (code) {
-    case SDLK_q: player.vel.x = -player.speed; break;
-    case SDLK_d: player.vel.x = player.speed; break;
-    case SDLK_z: player.vel.y = -player.speed; break;
-    case SDLK_s: player.vel.y = player.speed; break;
-    default: break;
-    }
-}
-
-void World::stop_player(SDL_Keycode code) {
-    switch(code) {
-    case SDLK_q: case SDLK_d: player.vel.x = 0; break;
-    case SDLK_z: case SDLK_s: player.vel.y = 0; break;
-    default: break;
-    }
+void World::move_player() {
+    const Uint8 *keyboard = SDL_GetKeyboardState(NULL);
+    player.vel.x = (keyboard[SDL_SCANCODE_D] - keyboard[SDL_SCANCODE_A]) * player.speed;
+    player.vel.y = (keyboard[SDL_SCANCODE_S] - keyboard[SDL_SCANCODE_W]) * player.speed;
 }
 
 // Returns true if there is a collision otherwise returns false
-bool World::check_collision(SDL_Rect rect) {
+Maybe<vec2i> World::check_collision(SDL_Rect rect) {
     vec2i p = screenToGrid(vec2i(rect.x, rect.y));
     for (int y = -1; y <= 1; y++) {
         for (int x = -1; x <= 1; x++) {
             auto tile_pos = p + vec2i(x,y);
             Rect r(tile_pos * TILE_SIZE, TILE_SIZE);
             if (rect_collide(rect, r.to_sdl()) && getTileAt(tile_pos)->collide) {
-                return true;
+                return {true, tile_pos};
             }
         }
     }
-    return false;
+    return {};
 }
+

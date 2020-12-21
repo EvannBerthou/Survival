@@ -39,12 +39,6 @@ void Game::event(SDL_Event *event) {
             if (event->key.keysym.sym == SDLK_TAB) {
                 debug = !debug;
             }
-            else {
-                world.move_player(event->key.keysym.sym);
-            }
-            break;
-        case SDL_KEYUP:
-            world.stop_player(event->key.keysym.sym);
             break;
         }
     }

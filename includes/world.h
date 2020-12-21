@@ -4,6 +4,7 @@
 #include "camera.h"
 #include "entity.h"
 #include "chunk.h"
+#include "utils.h"
 
 #define MAX_WORLD_ENTITIES 100
 #define MAX_CHUNKS 1024
@@ -21,15 +22,14 @@ struct World {
     void update();
     void render(SDL_Renderer *renderer, Camera &camera);
 
-    void move_player(SDL_Keycode code);
-    void stop_player(SDL_Keycode code);
+    void move_player();
 
     void generate(time_t seed);
     void addChunk(vec2i pos);
     Chunk *getChunkAt(vec2i pos);
     Tile *getTileAt(vec2i pos);
 
-    bool check_collision(SDL_Rect rect);
+    Maybe<vec2i> check_collision(SDL_Rect rect);
 };
 
 

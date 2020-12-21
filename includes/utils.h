@@ -3,6 +3,7 @@
 #include <iostream>
 #include <SDL2/SDL_ttf.h>
 #include "maths.h"
+
 #include "world.h"
 
 // SDL Error Checker
