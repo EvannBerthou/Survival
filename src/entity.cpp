@@ -1,12 +1,6 @@
 #include "entity.h"
 #include "render.h"
 
-/*
- * TODO: Collision
- *  Faire bouger l'entité
- *  Si est dans un mur : Redéplacer l'entité au bord de la tile
- */
-
 // cp : Collision pos, gp : grid pos; pp : entity pos
 void Entity::collision(int cp, int gp, int *ep, int *vel) {
     // Move the entity to the left of the tile
