@@ -43,3 +43,19 @@ SDL_Rect Entity::to_rect() {
     return Rect(pos, ENTITY_SIZE).to_sdl();
 }
 
+void Entity::set_vel(int key, float *v) {
+    if (sign(*v) != sign(key)) {
+        *v = 0;
+    }
+    if (key == 0) {
+        if (*v != 0) {
+            *v -= 1 * sign(*v);
+        }
+        if (abs(*v) < 1)  {
+            *v = 0;
+        }
+    }
+    else {
+        *v = CLAMP(*v + key * speed, -max_speed, +max_speed);
+    }
+}

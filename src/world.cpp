@@ -69,20 +69,6 @@ void World::render(SDL_Renderer *renderer, Camera &camera) {
     player.render(renderer, camera);
 }
 
-void Entity::set_vel(int key, float *v) {
-    if (key == 0) {
-        if (*v != 0) {
-            *v -= 1 * sign(*v);
-        }
-        if (abs(*v) < 1)  {
-            *v = 0;
-        }
-    }
-    else {
-        *v = CLAMP(*v + key * speed, -max_speed, +max_speed);
-    }
-}
-
 void World::move_player() {
     const Uint8 *keyboard = SDL_GetKeyboardState(NULL);
 
