@@ -1,7 +1,7 @@
 #include "camera.h"
 #include "render.h"
 
-void Camera::center_on(vec2<int> center) {
+void Camera::center_on(vec2f center) {
     pos.x = (800 / 2 - center.x);
     pos.y = (600 / 2 - center.y);
 }

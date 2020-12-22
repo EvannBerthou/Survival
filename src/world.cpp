@@ -69,12 +69,28 @@ void World::render(SDL_Renderer *renderer, Camera &camera) {
     player.render(renderer, camera);
 }
 
-
+void Entity::set_vel(int key, float *v) {
+    if (key == 0) {
+        if (*v != 0) {
+            *v -= 1 * sign(*v);
+        }
+        if (abs(*v) < 1)  {
+            *v = 0;
+        }
+    }
+    else {
+        *v = CLAMP(*v + key * speed, -max_speed, +max_speed);
+    }
+}
 
 void World::move_player() {
     const Uint8 *keyboard = SDL_GetKeyboardState(NULL);
-    player.vel.x = (keyboard[SDL_SCANCODE_D] - keyboard[SDL_SCANCODE_A]) * player.speed;
-    player.vel.y = (keyboard[SDL_SCANCODE_S] - keyboard[SDL_SCANCODE_W]) * player.speed;
+
+    int x = keyboard[SDL_SCANCODE_D] - keyboard[SDL_SCANCODE_A];
+    player.set_vel(x, &player.vel.x);
+
+    int y = keyboard[SDL_SCANCODE_S] - keyboard[SDL_SCANCODE_W];
+    player.set_vel(y, &player.vel.y);
 }
 
 // Returns true if there is a collision otherwise returns false

@@ -2,12 +2,12 @@
 #include "render.h"
 
 // cp : Collision pos, gp : grid pos; pp : entity pos
-void Entity::collision(int cp, int gp, int *ep, int *vel) {
-    // Move the entity to the left of the tile
+void Entity::collision(int cp, int gp, float *ep, float *vel) {
+    // Move the entity to the left or top of the tile
     if (cp > gp) {
         *ep = cp * TILE_SIZE - ENTITY_SIZE - 1;
     }
-    // Move the entity to the right of the tile
+    // Move the entity to the right or bottom of the tile
     else if (cp < gp) {
         *ep = cp * TILE_SIZE + TILE_SIZE + 1;
     }
@@ -18,7 +18,7 @@ void Entity::update(World *world) {
     auto gridPos = screenToGrid(pos);
 
     // Check x collisions
-    auto coll_x = world->check_collision(Rect(pos + vec2i(vel.x, 0), ENTITY_SIZE).to_sdl());
+    auto coll_x = world->check_collision(Rect(pos + vec2f(vel.x, 0), ENTITY_SIZE).to_sdl());
     // If there is a collision
     if (coll_x.has) {
         // Correct the position of the entity
@@ -26,7 +26,7 @@ void Entity::update(World *world) {
     }
 
     // Same but for y axis
-    auto coll_y = world->check_collision(Rect(pos + vec2i(0, vel.y), ENTITY_SIZE).to_sdl());
+    auto coll_y = world->check_collision(Rect(pos + vec2f(0, vel.y), ENTITY_SIZE).to_sdl());
     if (coll_y.has) {
         collision(coll_y.val.y, gridPos.y, &pos.y, &vel.y);
     }

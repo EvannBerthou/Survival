@@ -32,11 +32,13 @@ inline int random(int a, int b) {
 int render_text(SDL_Renderer *renderer, TTF_Font *font,
                 std::string str, vec2i pos, SDL_Color color);
 
-inline vec2i getChunkPos(vec2i pos) {
+template <typename T>
+inline vec2<T> getChunkPos(vec2<T> pos) {
     return {(int)std::floor(pos.x / (float)CHUNK_TILE_COUNT), (int)std::floor(pos.y / (float)CHUNK_TILE_COUNT)};
 }
 
-inline vec2i screenToGrid(vec2i screen) {
+template <typename T>
+inline vec2i screenToGrid(vec2<T> screen) {
     return {(int)std::floor(screen.x / (float)TILE_SIZE), (int)std::floor(screen.y / (float)TILE_SIZE)};
 }
 

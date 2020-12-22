@@ -8,16 +8,18 @@
 
 struct World;
 struct Entity {
-    vec2i pos;
-    vec2i vel;
+    vec2f pos;
+    vec2f vel;
     SDL_Color color;
-    int speed = 5;
+    float speed = 1;
+    float max_speed = 5;
 
     void update(World *world);
     void render(SDL_Renderer *renderer, Camera &camera);
     SDL_Rect to_rect();
 
-    void collision(int cp, int gp, int *pp, int *vel);
+    void collision(int cp, int gp, float *pp, float *vel);
+    void set_vel(int key, float *v);
 };
 
 #include "world.h"
